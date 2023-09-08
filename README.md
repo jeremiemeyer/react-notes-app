@@ -20,7 +20,7 @@ $ npm run dev
 ## Deployment
 
 I deployed this app using Vercel if you want to test it.
-Link: ...
+Link: https://react-notes-app-eight-zeta.vercel.app/
 
 ## References
 
