@@ -5,6 +5,7 @@ import { addNewNote } from "../features/notes"
 import { editNote } from "../features/notes"
 import { deleteNote } from "../features/notes"
 import { nanoid } from "@reduxjs/toolkit"
+import { EmailShareButton, EmailIcon } from "react-share"
 
 export default function NoteForm({ actionType, onClose }) {
   const selectedNote = useSelector((state) => state.shownotes.noteToShow)
@@ -41,27 +42,27 @@ export default function NoteForm({ actionType, onClose }) {
       alert("Il faut remplir le formulaire, mon garçon.")
     } else {
       // dispatch(addNewNote([titleValue, subtitleValue, bodyTextValue, nanoid(6)]))
-      dispatch(addNewNote(
-        {
-          "title": titleValue,
-          "subtitle": subtitleValue,
-          "bodyText": bodyTextValue,
-          "id":  nanoid(6)
-        }
-      ))
+      dispatch(
+        addNewNote({
+          title: titleValue,
+          subtitle: subtitleValue,
+          bodyText: bodyTextValue,
+          id: nanoid(6),
+        })
+      )
       onClose()
     }
   }
 
   const handleEdit = () => {
-    dispatch(editNote(
-      {
-        "title": titleValue,
-        "subtitle": subtitleValue,
-        "bodyText": bodyTextValue,
-        "id": selectedNote.id
-      }
-    ))
+    dispatch(
+      editNote({
+        title: titleValue,
+        subtitle: subtitleValue,
+        bodyText: bodyTextValue,
+        id: selectedNote.id,
+      })
+    )
   }
 
   return (
@@ -84,7 +85,6 @@ export default function NoteForm({ actionType, onClose }) {
         type="text"
         value={subtitleValue}
         onChange={(e) => handleChangeSubtitle(e)}
-
       />
 
       <p className="text-xl text-left pb-2">Contenu</p>
@@ -109,8 +109,14 @@ export default function NoteForm({ actionType, onClose }) {
             >
               Supprimer
             </button>
+            <EmailShareButton
+              url=""
+              subject={`${titleValue} - ${subtitleValue}`}
+              body={bodyTextValue}
+            >
+              <EmailIcon size={30} round={false} borderRadius={10} />
+            </EmailShareButton>
           </div>
-
         </>
       ) : (
         <button
