@@ -6,13 +6,13 @@ const initialState = {
 }
 
 const addNewNoteToDB = async(noteData) => {
-    await axios.post('http://localhost:3000/notes', noteData)
+    await axios.post('https://jm-notes-app.fly.dev/notes', noteData)
 }
 const deleteNoteFromDB = async(noteID) => {
-    await axios.delete(`http://localhost:3000/notes/${noteID}`)
+    await axios.delete(`https://jm-notes-app.fly.dev/notes/${noteID}`)
 }
 const editNoteToDB = async(noteData) => {
-    await axios.patch(`http://localhost:3000/notes/${noteData.id}`, noteData)
+    await axios.patch(`https://jm-notes-app.fly.dev/notes/${noteData.id}`, noteData)
     .then(res => console.log(res.data))
 }
 
