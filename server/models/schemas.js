@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const noteSchema = new Schema({
+    folder:{type:String},
     title:{type:String, required:true},
     subtitle:{type:String, required:true},
     bodyText:{type:String},

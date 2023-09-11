@@ -3,9 +3,9 @@ const router = express.Router()
 const schemas = require('../models/schemas')
 
 router.post('/notes', async(req, res) => {
-  const {title, subtitle, bodyText, id} = req.body
+  const {folder, title, subtitle, bodyText, id} = req.body
   // console.log(title + ' | ' + subtitle + ' | ' + bodyText + ' | ' + id)
-  const noteData = {title: title, subtitle: subtitle, bodyText: bodyText}
+  const noteData = {folder: folder, title: title, subtitle: subtitle, bodyText: bodyText}
   const newNote = new schemas.Note(noteData)
   const saveNote = await newNote.save()
   if (saveNote) {
@@ -28,8 +28,8 @@ router.get('/notes', async(req, res) => {
 })
 
 router.patch('/notes/:id', async(req, res) => {
-  const {title, subtitle, bodyText} = req.body
-  const noteData = {title: title, subtitle: subtitle, bodyText: bodyText}
+  const {folder, title, subtitle, bodyText} = req.body
+  const noteData = {folder: folder, title: title, subtitle: subtitle, bodyText: bodyText}
 
   const patchNote = await schemas.Note.findByIdAndUpdate(req.params.id, noteData)
 

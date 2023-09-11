@@ -1,7 +1,7 @@
 import Edit from "./../assets/edit.svg"
 import { useState } from "react"
 import { createPortal } from "react-dom"
-import AddNoteModal from "./AddNoteModal"
+import AddNoteModal from "./modals/AddNoteModal"
 
 export default function CreateNoteButton() {
   const [showNewNoteModal, setShowNewNoteModal] = useState(false)

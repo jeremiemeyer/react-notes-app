@@ -3,8 +3,12 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { addNewNote } from "../features/notes"
 import { editNote } from "../features/notes"
-import { deleteNote } from "../features/notes"
 import { EmailShareButton, EmailIcon } from "react-share"
+import DeleteNoteButton from "./DeleteNoteButton"
+import FolderSelect from "./FolderSelect"
+import { TextField, Button } from "@mui/material"
+import SendIcon from "@mui/icons-material/Send"
+import DoneIcon from "@mui/icons-material/Done"
 
 export default function NoteForm({ actionType, onClose }) {
   const selectedNote = useSelector((state) => state.shownotes.noteToShow)
@@ -13,6 +17,8 @@ export default function NoteForm({ actionType, onClose }) {
   const [titleValue, setTitleValue] = useState("")
   const [subtitleValue, setSubtitleValue] = useState("")
   const [bodyTextValue, setBodyTextValue] = useState("")
+  const [folderForNewNote, setFolderForNewNote] = useState("")
+  const [noteNewFolder, setNoteNewFolder] = useState(selectedNote.folder)
 
   useEffect(() => {
     if (actionType === "edit") {
@@ -20,10 +26,16 @@ export default function NoteForm({ actionType, onClose }) {
       setTitleValue(selectedNote.title)
       setSubtitleValue(selectedNote.subtitle)
       setBodyTextValue(selectedNote.bodyText)
-    } else if (actionType === "creer") {
+      setNoteNewFolder(folderForNewNote)
+    } else if (actionType === "create") {
       console.log("create mode")
     }
   }, [selectedNote._id])
+
+  const handleCallback = (childData) => {
+    setFolderForNewNote(childData)
+    console.log(childData)
+  }
 
   const handleChangeTitle = (e) => {
     setTitleValue(e.target.value)
@@ -36,13 +48,14 @@ export default function NoteForm({ actionType, onClose }) {
     setBodyTextValue(e.target.value)
   }
 
-  const handleAjouter = () => {
+  const handleAddNote = () => {
     if (titleValue === "" || subtitleValue === "") {
       alert("Il faut remplir le formulaire, mon garçon.")
     } else {
       // dispatch(addNewNote([titleValue, subtitleValue, bodyTextValue, nanoid(6)]))
       dispatch(
         addNewNote({
+          folder: folderForNewNote,
           title: titleValue,
           subtitle: subtitleValue,
           bodyText: bodyTextValue,
@@ -55,6 +68,7 @@ export default function NoteForm({ actionType, onClose }) {
   const handleEdit = () => {
     dispatch(
       editNote({
+        folder: folderForNewNote,
         title: titleValue,
         subtitle: subtitleValue,
         bodyText: bodyTextValue,
@@ -64,49 +78,58 @@ export default function NoteForm({ actionType, onClose }) {
   }
 
   return (
-    <div className="flex flex-grow  flex-col p-6 text-white text-center">
+    <div className="flex flex-grow min-w-[800px] flex-col p-6 text-center">
       <h1 className="text-2xl pb-8">
         {actionType === "edit" ? "Editer" : "Créer"} une note
       </h1>
-
-      <p className="text-xl text-left pb-2">Titre</p>
-      <input
-        className="text-black h-8 p-4 mb-6 bg-slate-100"
-        type="text"
+      {actionType === "create" && <FolderSelect actionType="create" parentCallback={handleCallback} />}
+      {actionType === "edit" && <FolderSelect actionType="edit" parentCallback={handleCallback} />}
+      <TextField
         value={titleValue}
         onChange={(e) => handleChangeTitle(e)}
+        id="outlined-basic"
+        variant="outlined"
+        fullWidth
+        label="Titre"
+        style={{ marginBottom: "1em" }}
       />
 
-      <p className="text-xl text-left pb-2">Sous-titre</p>
-      <input
-        className="text-black h-8 p-4 mb-6 bg-slate-100"
-        type="text"
+      <TextField
         value={subtitleValue}
         onChange={(e) => handleChangeSubtitle(e)}
+        id="outlined-basic"
+        variant="outlined"
+        fullWidth
+        label="Sous-titre"
+        style={{ marginBottom: "1em" }}
       />
 
-      <p className="text-xl text-left pb-2">Contenu</p>
-      <textarea
-        className="resize h-[300px] text-black p-4 mb-6 bg-slate-100"
-        type="text"
+      <TextField
         value={bodyTextValue}
         onChange={(e) => handleChangeBodyText(e)}
+        id="outlined-multiline-static"
+        label="Contenu"
+        multiline
+        rows={8}
+        style={{ marginBottom: "1em" }}
       />
+
       {actionType === "edit" ? (
         <>
           <div className="flex flex-row gap-4">
-            <button
+            <Button
               onClick={() => handleEdit()}
-              className="rounded bg-green-600 hover:bg-green-500 h-8 px-4"
+              variant="contained"
+              startIcon={<DoneIcon />}
+              color="primary"
             >
               Sauvegarder
-            </button>
-            <button
-              onClick={() => dispatch(deleteNote(selectedNote._id))}
-              className="rounded bg-red-600 hover:bg-red-500 h-8 px-4"
-            >
-              Supprimer
-            </button>
+            </Button>
+
+            <DeleteNoteButton selectedNoteId={selectedNote._id} />
+          </div>
+          <div className="flex flex-row mt-4 gap-4">
+            <span>Envoyer un rappel par e-mail</span>
             <EmailShareButton
               url=""
               subject={`${titleValue} - ${subtitleValue}`}
@@ -117,12 +140,14 @@ export default function NoteForm({ actionType, onClose }) {
           </div>
         </>
       ) : (
-        <button
-          onClick={() => handleAjouter()}
-          className="block mx-auto bg-slate-800 hover:bg-slate-700 text-slate-200 rounded px-4 py-2 mt-7"
+        <Button
+          onClick={() => handleAddNote()}
+          variant="contained"
+          startIcon={<SendIcon />}
+          color="primary"
         >
           Ajouter
-        </button>
+        </Button>
       )}
     </div>
   )
