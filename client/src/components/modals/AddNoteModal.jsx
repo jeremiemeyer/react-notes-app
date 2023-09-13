@@ -2,7 +2,7 @@ import NoteForm from "../NoteForm"
 import { Button } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 
-export default function AddNoteModal({ onClose }) {
+export default function AddNoteModal({ onClose, userData }) {
   return (
     <div
       onClick={onClose}
@@ -20,7 +20,7 @@ export default function AddNoteModal({ onClose }) {
             </button>
 
 
-        <NoteForm actionType="create" onClose={onClose} />
+        <NoteForm actionType="create" userData={userData} onClose={onClose}/>
       </div>
     </div>
   )

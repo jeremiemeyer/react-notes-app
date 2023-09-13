@@ -1,14 +1,15 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useState, useEffect } from "react"
-import { getNotesList } from "../features/notes"
+// import { getNotesList } from "../features/notes"
+import { addNotes, getNotesList } from "../features/notes"
 import { editNotes, selectFolderToShow } from "../features/shownotes"
 import SearchBar from "./SearchBar"
 import spinner from "./../assets/spinner.svg"
 import FolderSelect from "./FolderSelect"
-import CreateNoteButton from "./CreateNoteButton"
-import DeleteNoteButton from "./DeleteNoteButton"
+import CreateNoteButton from "./buttons/CreateNoteButton"
+import DeleteNoteButton from "./buttons/DeleteNoteButton"
 
-export default function NotesList() {
+export default function NotesList({userData}) {
   const notes = useSelector((state) => state.notes)
   const notifications = useSelector((state) => state.notifications)
   const selectedNote = useSelector((state) => state.shownotes.noteToShow)
@@ -19,18 +20,24 @@ export default function NotesList() {
 
   // dégueu. Que mettre dans le tableau de dépendances ?
   useEffect(() => {
+    // console.log(userData)
+    if (userData.email==="") {
+      // console.log("no user data")
+    } else {
       const fetchData = async () => {
         try {
-          await dispatch(getNotesList())
+          // console.log(userData.email)
+          await dispatch(getNotesList(userData?.email))
           setHasBeenRetrieved(true)
         } catch (error) {
           console.log("error retrieving data")
           setHasBeenRetrieved(false)
         }
       }
+
       fetchData()
-      console.log(notifications)
-  }, [] ) //quand la derniere notification est différente
+    }
+  }, [userData, notifications.length])
 
   let handleInput = (e) => {
     var lowerCase = e.target.value.toLowerCase()
@@ -69,8 +76,9 @@ export default function NotesList() {
           <li
             onClick={() => dispatch(editNotes(el))}
             key={el._id}
+            // on check sur id et non _id. C'est l'id dans le store redux, pas l'_id mongodb
             className={`${
-              selectedNote._id === el._id ? "bg-slate-400" : "bg-slate-300"
+              selectedNote.id === el.id ? "bg-slate-400" : "bg-slate-300"
             } p-4 border  hover:bg-slate-400 cursor-pointer`}
           >
             <p className="font-semibold">{el.title}</p>
@@ -88,9 +96,9 @@ export default function NotesList() {
       onClick={() =>
         dispatch(editNotes({ title: "", subtitle: "", bodyText: "" }))
       }
-      className="bg-slate-200 w-[400px] "
+      className="bg-slate-200 w-[400px] h-[calc(100vh-40px)] rounded-tl-lg"
     >
-      <div className="fixed bg-slate-200 w-[400px] px-2">
+      <div className="w-[400px] px-2 pb-2">
         <h1 className="text-2xl p-6 font-semibold text-center pb-8 ">
           Mes notes
         </h1>
@@ -101,7 +109,7 @@ export default function NotesList() {
         />
       </div>
 
-      <div className="mt-[220px] overflow-y-auto max-h-[calc(100vh-220px)]">
+      <div className="overflow-y-auto max-h-[calc(100vh-264px)]">
         {hasBeenRetrieved ? content : <img src={spinner} alt="" />}
       </div>
     </div>

@@ -2,9 +2,9 @@ import { TextField, Button } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { deleteNote } from "../features/notes"
+import { deleteNote } from "../../features/notes"
 import { createPortal } from "react-dom"
-import ConfirmDeleteModal from "./modals/ConfirmDeleteModal"
+import ConfirmDeleteModal from "./../modals/ConfirmDeleteModal"
 
 export default function DeleteNoteButton({ selectedNoteId }) {
   const dispatch = useDispatch()

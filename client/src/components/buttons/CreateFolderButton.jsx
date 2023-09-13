@@ -1,7 +1,7 @@
-import Folder from "./../assets/folder.svg"
+import Folder from "./../../assets/folder.svg"
 import { useState } from "react"
 import { createPortal } from "react-dom"
-import CreateFolderModal from "./modals/CreateFolderModal"
+import CreateFolderModal from "../modals/CreateFolderModal"
 
 
 export default function CreateNoteButton() {

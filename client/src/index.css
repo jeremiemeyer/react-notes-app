@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 .bg-blur {
-    backdrop-filter: blur(10px);
-  }
-    
+  backdrop-filter: blur(10px);
+}
+
+.orange_gradient {
+  @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;
+}
+
+.green_gradient {
+  @apply bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent;
+}
+
+.blue_gradient {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
+}
